@@ -1,7 +1,7 @@
 const respondCORS = (error, data) => {
   return {
     "statusCode": error ? 400 : 200,
-    headers: {
+    "headers": {
       "Access-Control-Allow-Origin": '*',
       "Access-Control-Allow-Credentials": true
     },
