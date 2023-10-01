@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Lambda Resource Stack
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DeployementStage:
+    Type: String
+    Default: Dev
+  LambdaPackageName:
+    Type: String
+    Default: ./lambda/
+
+Resources:
+
+  # CORS preflight for API resource '/welcome'
+  LambdaWelcomeOption:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs16.x
+      Handler: src/cors/cors.handler
+      CodeUri: !Ref LambdaPackageName
+      Events:
+        LambdaInvokeAPI:
+          Type: Api
+          Properties:
+            Method: options
+            Path: /welcome
+            RestApiId:
+              Ref: LambdaResourceApi
+
+
+  LambdaWelcomeGet:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs16.x
+      Handler: src/welcome/welcome.handler
+      CodeUri: !Ref LambdaPackageName
+      Environment:
+        Variables:
+          WELCOME_MSG: "Hello There!"
+      Events:
+        LambdaInvokeAPI:
+          Type: Api
+          Properties:
+            Method: get
+            Path: /welcome
+            # RequestParameters: (eg. add request field if necessary)
+            #   - method.request.header.AccessToken
+            RestApiId:
+              Ref: LambdaResourceApi
+            # Auth: (eg. using a user pool authorizer as commented in API section)
+            #     Authorizer: LambdaResourceApiUserPool  
+      # Policies: (eg. adding IAM policy to this lambda for S3 access permisions)
+      #   - S3CrudPolicy:
+      #       BucketName: !Ref YourS3StorageResource
+
+
+  LambdaResourceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref DeployementStage
+      MethodSettings:
+        - ResourcePath: /*
+          HttpMethod: "*"
+          ThrottlingBurstLimit: 50
+          ThrottlingRateLimit: 100
+      # Auth:
+      #   Authorizers: (eg. create a user pool authorizer for this API)
+      #     LambdaResourceApiUserPoolAuth: 
+      #       AuthType: COGNITO_USER_POOLS
+      #       UserPoolArn: !GetAtt LambdaResourceApiUserPool.Arn 
+
+
