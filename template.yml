@@ -2,6 +2,8 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Lambda Resource Stack
 Transform: AWS::Serverless-2016-10-31
 
+# Please DO NOT save any important secects in this template, as this file by default
+# is not ignored when syncing with remote repo.
 Parameters:
   DeployementStage:
     Type: String
