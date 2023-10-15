@@ -19,7 +19,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs16.x
-      Handler: src/cors/cors.handler
+      Handler: src/welcome/options/options.handler
       CodeUri: !Ref LambdaPackageName
       Events:
         LambdaInvokeAPI:
@@ -35,7 +35,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs16.x
-      Handler: src/welcome/welcome.handler
+      Handler: src/welcome/get/get.handler
       CodeUri: !Ref LambdaPackageName
       Environment:
         Variables:
@@ -56,6 +56,53 @@ Resources:
       #   - S3CrudPolicy:
       #       BucketName: !Ref YourS3StorageResource
 
+  LambdaWelcomePost:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs16.x
+      Handler: src/welcome/post/post.handler
+      CodeUri: !Ref LambdaPackageName
+      Events:
+        LambdaInvokeAPI:
+          Type: Api
+          Properties:
+            Method: post
+            Path: /welcome
+            RestApiId:
+              Ref: LambdaResourceApi
+
+  LambdaWelcomePut:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs16.x
+      Handler: src/welcome/put/put.handler
+      CodeUri: !Ref LambdaPackageName
+      Events:
+        LambdaInvokeAPI:
+          Type: Api
+          Properties:
+            Method: put
+            Path: /welcome
+            RestApiId:
+              Ref: LambdaResourceApi
+
+  LambdaWelcomeDelete:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs16.x
+      Handler: src/welcome/delete/delete.handler
+      CodeUri: !Ref LambdaPackageName
+      Events:
+        LambdaInvokeAPI:
+          Type: Api
+          Properties:
+            Method: delete
+            Path: /welcome
+            RestApiId:
+              Ref: LambdaResourceApi
+
+
+#### define API gateway resource endpoints.
 
   LambdaResourceApi:
     Type: AWS::Serverless::Api

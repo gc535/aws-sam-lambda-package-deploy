@@ -9,7 +9,7 @@ npm install
 Go to the root directory, and deploy the installed package using aws sam cli:
 ```bash
 sam build
-sam deploy --guide
+sam deploy --guided
 ```
 You will need to follow the guide and setup the deployment step by step.
 
